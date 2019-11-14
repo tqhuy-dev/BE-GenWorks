@@ -20,7 +20,7 @@ router.put('/' , (req , res , next) => {
 })
 
 router.get('/:email' , (req , res , next) => {
-    res.status(200).json(new ResponseObject(Constant.HTTP_STATUS_CODE.OK , "User information"));
+    UserServices.getCustomerInformation(req , res);
 })
 
 router.delete('/' , (req , res , next) => {
