@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha"
   },
   "author": "huy",
   "license": "ISC",
@@ -12,8 +12,13 @@
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",
     "express": "^4.17.1",
+    "mocha": "^6.2.2",
     "morgan": "^1.9.1",
     "pg": "^7.12.1",
-    "winston": "^3.2.1"
+    "winston": "^3.2.1",
+    "babel-cli": "^6.26.0",
+    "babel-preset-env": "^1.7.0",
+    "chai": "^4.1.2",
+    "chai-http": "^4.0.0"
   }
 }
