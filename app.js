@@ -7,6 +7,14 @@ const { Pool } = require('pg');
 
 const UserController = require('./controller/user-controller');
 
+// const { Client } = require('pg');
+// const connectionString = 'postgres://postgres:123456@localhost:5432/GenWorks';
+// const client = new Client({
+//     connectionString: connectionString
+// })
+
+// client.connect();
+
 app.use(morgan('dev'))
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false}));
