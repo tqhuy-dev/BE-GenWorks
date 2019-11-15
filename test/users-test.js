@@ -34,6 +34,7 @@ describe("Server!", () => {
     chai
       .request(app)
       .get("/api/v1/users/tqhuy1996.developer@gmail.com")
+      .set('authorization' , '3287146a2fcbecf46a6523726f2ecea6c05fad12c4a2ac023378dc223eb8522f')
       .end((err, res) => {
         expect(res).to.have.status(200);
         expect(res.body.code).to.equal(200)
@@ -76,7 +77,7 @@ describe("Server!", () => {
     .end((err , res) => {
       expect(res).to.have.status(200);
       expect(res.body.code).to.equal(200);
-      expect(res.body.data.email).to.equal("tqhuy1996.developer@gmail.com");
+      expect(res.body.data.customer.email).to.equal("tqhuy1996.developer@gmail.com");
       done();
     })
   });
@@ -95,4 +96,29 @@ describe("Server!", () => {
       done();
     })
   })
+
+  it("Test authentication get customer information api" , done => {
+    chai
+    .request(app)
+    .get('/api/v1/users/tqhuy1996.developer@gmail.com')
+    .set('authorization' , '3287146a2fcbecf46a6523726f2ecea6c05fad12c4a2ac023378dc223eb8522f')
+    .end((err , res) => {
+      expect(res).to.have.status(200);
+      expect(res.body.code).to.equal(200);
+      expect(res.body.data.email).to.equal("tqhuy1996.developer@gmail.com");
+      done();
+    })
+  });
+
+  it("Test authentication get customer information api no token" , done => {
+    chai
+    .request(app)
+    .get('/api/v1/users/tqhuy1996.developer@gmail.com')
+    .end((err , res) => {
+      expect(res).to.have.status(401);
+      expect(res.body.code).to.equal(401);
+      expect(res.body.message).to.equal("Unauthorization");
+      done();
+    })
+  });
 });

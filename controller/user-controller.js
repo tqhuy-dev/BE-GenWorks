@@ -14,7 +14,7 @@ router.use('/',(req , res , next) => {
         if(data) {
             next()
         } else {
-            res.status(200).json(new ResponseObject(Constant.HTTP_STATUS_CODE.UNAUTHORIZED , "Unauthorization"))    
+            res.status(Constant.HTTP_STATUS_CODE.UNAUTHORIZED).json(new ResponseObject(Constant.HTTP_STATUS_CODE.UNAUTHORIZED , "Unauthorization"))    
         }
     })
 })
