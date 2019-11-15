@@ -7,8 +7,18 @@ router.post('/login' , (req , res , next) => {
     res.status(200).json(new ResponseObject(Constant.HTTP_STATUS_CODE.OK  , "Login success"))
 })
 
-router.post('/' , (req , res , next) => {
-    UserServices.createUserServices(req , res);
+// router.post('/' , (req , res ,next) => {
+//     UserServices.validate.checkValidateSignup();
+//     next()
+// }, (req , res , next) => {
+//     UserServices.userServices.createUserServices(req , res);
+// })
+
+router.post('/' , UserServices.validate.checkValidateSignup() , UserServices.userServices.createUserServices)
+
+router.use('/',(req , res , next) => {
+    console.log('request authorization')
+    next()
 })
 
 router.put('/password' , (req , res , next) => {
@@ -20,7 +30,7 @@ router.put('/' , (req , res , next) => {
 })
 
 router.get('/:email' , (req , res , next) => {
-    UserServices.getCustomerInformation(req , res);
+    UserServices.userServices.getCustomerInformation(req , res);
 })
 
 router.delete('/' , (req , res , next) => {
