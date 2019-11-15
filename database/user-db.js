@@ -58,5 +58,27 @@ module.exports = {
                 }
             })
         })
+    },
+
+    login: (req) => {
+        const testQuery = 'select ' +
+        'email,' +
+        'first_name,' +
+        'last_name,' +
+        'age,' +
+        'address,' +
+        'birthdate ' + 'from public."customer" where email = $1 and password = $2';
+        const value = [req.body.email , req.body.password];
+        return new Promise((resolve , reject) => {
+            client.query(testQuery , value , (err , res) => {
+                if(err) {
+                    reject(err);
+                } else {
+                    let dataCustomer = res.rows[0];
+                    dataCustomer.address = JSON.parse(dataCustomer.address);
+                    resolve(dataCustomer)
+                }
+            })
+        })
     }
 }

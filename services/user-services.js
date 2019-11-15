@@ -28,6 +28,22 @@ const userServices = {
             return res.status(Constant.HTTP_STATUS_CODE.INTERNAL_ERROR)
                 .json(new ResponseObject(Constant.HTTP_STATUS_CODE.INTERNAL_ERROR, error));
         }
+    },
+
+    async login(req , res) {
+        try {
+            const errors = validationResult(req); // Finds the validation errors in this request and wraps them in an object with handy functions
+            if (!errors.isEmpty()) {
+                return res.status(Constant.HTTP_STATUS_CODE.BAD_REQUEST)
+                .json(new ResponseObject(Constant.HTTP_STATUS_CODE.BAD_REQUEST, errors.array()));
+            }
+            const data = await UserDB.login(req);
+            return res.status(Constant.HTTP_STATUS_CODE.OK)
+            .json(new ResponseObject(Constant.HTTP_STATUS_CODE.OK, "Login success", data));
+        } catch (error) {
+            return res.status(Constant.HTTP_STATUS_CODE.INTERNAL_ERROR)
+                .json(new ResponseObject(Constant.HTTP_STATUS_CODE.INTERNAL_ERROR, error));
+        }
     }
 }
 
@@ -40,6 +56,13 @@ const validate = {
             body('last_name' , 'last name is required').exists(),
             body('age' , 'age is required').exists().isInt(),
             body('birthdate' , 'birthdate is required').exists()
+        ]
+    },
+
+    checkValidateLogin() {
+        return [
+            body('email' , 'email is required').exists(),
+            body('password' , 'password is required').exists()
         ]
     }
 }

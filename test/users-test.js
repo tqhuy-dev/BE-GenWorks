@@ -64,4 +64,35 @@ describe("Server!", () => {
         done()
       });
   });
+
+  it("Test login" , done => {
+    chai
+    .request(app)
+    .post('/api/v1/users/login')
+    .send({
+      email: "tqhuy1996.developer@gmail.com",
+      password: "Abc123"
+    })
+    .end((err , res) => {
+      expect(res).to.have.status(200);
+      expect(res.body.code).to.equal(200);
+      expect(res.body.data.email).to.equal("tqhuy1996.developer@gmail.com");
+      done();
+    })
+  });
+
+  it("Test login validate body login" , done => {
+    chai
+    .request(app)
+    .post('/api/v1/users/login')
+    .send({
+      emaild: "tqhuy1996.developer@gmail.com",
+      password: "Abc123"
+    })
+    .end((err , res) => {
+      expect(res).to.have.status(400);
+      expect(res.body.code).to.equal(400);
+      done();
+    })
+  })
 });
