@@ -80,5 +80,19 @@ module.exports = {
                 }
             })
         })
+    },
+
+    updateTokenCustomer: (token , email) => {
+        const testQuery = 'update public."customer" set token = $1 where email = $2';
+        const value = [token , email];
+        return new Promise((resolve , reject) => {
+            client.query(testQuery , value , (err , res) => {
+                if(err) {
+                    reject(err);
+                } else {
+                    resolve(true)
+                }
+            })
+        })
     }
 }

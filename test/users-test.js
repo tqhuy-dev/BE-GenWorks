@@ -34,7 +34,7 @@ describe("Server!", () => {
     chai
       .request(app)
       .get("/api/v1/users/tqhuy1996.developer@gmail.com")
-      .set('authorization' , '3287146a2fcbecf46a6523726f2ecea6c05fad12c4a2ac023378dc223eb8522f')
+      .set('authorization' , '36cce7d61e295c504476cfe8ef65724d93e2365b760e9712b9f2eb4837e5ce7d')
       .end((err, res) => {
         expect(res).to.have.status(200);
         expect(res.body.code).to.equal(200)
@@ -101,7 +101,7 @@ describe("Server!", () => {
     chai
     .request(app)
     .get('/api/v1/users/tqhuy1996.developer@gmail.com')
-    .set('authorization' , '3287146a2fcbecf46a6523726f2ecea6c05fad12c4a2ac023378dc223eb8522f')
+    .set('authorization' , '36cce7d61e295c504476cfe8ef65724d93e2365b760e9712b9f2eb4837e5ce7d')
     .end((err , res) => {
       expect(res).to.have.status(200);
       expect(res.body.code).to.equal(200);
@@ -121,4 +121,17 @@ describe("Server!", () => {
       done();
     })
   });
+
+  it("Test token not exist in database" , done => {
+    chai
+    .request(app)
+    .get('/api/v1/users/tqhuy1996.developer@gmail.com')
+    .set('authorization' , '36cce7d61e295c504476cfe8ef65724d93e2365b760e9712b9f2eb4837e5ce7ds')
+    .end((err , res) => {
+      expect(res).to.have.status(401);
+      expect(res.body.code).to.equal(401);
+      expect(res.body.message).to.equal("Unauthorization");
+      done();
+    })
+  })
 });

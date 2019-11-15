@@ -45,6 +45,7 @@ const userServices = {
                 customer : data,
                 token: token
             };
+            await UserDB.updateTokenCustomer(token , req.body.email);
             return res.status(Constant.HTTP_STATUS_CODE.OK)
             .json(new ResponseObject(Constant.HTTP_STATUS_CODE.OK, "Login success", dataResponse));
         } catch (error) {
