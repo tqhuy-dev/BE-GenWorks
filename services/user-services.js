@@ -2,6 +2,8 @@ const UserDB = require('../database/user-db');
 const Constant = require('../shared/constant/status_code');
 const ResponseObject = require('../shared/models/response_object');
 const { body, validationResult } = require('express-validator');
+const jwtServices = require('../shared/jwt/jwt-services');
+const sha = require('sha256');
 const userServices = {
     async createUserServices(req, res) {
         try {
@@ -38,8 +40,13 @@ const userServices = {
                 .json(new ResponseObject(Constant.HTTP_STATUS_CODE.BAD_REQUEST, errors.array()));
             }
             const data = await UserDB.login(req);
+            const token = sha(data + new Date());
+            const dataResponse = {
+                customer : data,
+                token: token
+            };
             return res.status(Constant.HTTP_STATUS_CODE.OK)
-            .json(new ResponseObject(Constant.HTTP_STATUS_CODE.OK, "Login success", data));
+            .json(new ResponseObject(Constant.HTTP_STATUS_CODE.OK, "Login success", dataResponse));
         } catch (error) {
             return res.status(Constant.HTTP_STATUS_CODE.INTERNAL_ERROR)
                 .json(new ResponseObject(Constant.HTTP_STATUS_CODE.INTERNAL_ERROR, error));
