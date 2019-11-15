@@ -6,6 +6,14 @@ const client = new Client({
 client.connect();
 const authorization = {
     async checkToken(req) {
-        
+        if(req.headers.authorization) {
+            return true;
+        }
+
+        return false;
     }
+}
+
+module.exports = {
+    authorization: authorization
 }
