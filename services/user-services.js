@@ -12,9 +12,15 @@ const userServices = {
                 return res.status(Constant.HTTP_STATUS_CODE.BAD_REQUEST)
                 .json(new ResponseObject(Constant.HTTP_STATUS_CODE.BAD_REQUEST, errors.array()));
             }
-            const result = await UserDB.createAccount(req);
-            return res.status(Constant.HTTP_STATUS_CODE.CREATED)
-                .json(new ResponseObject(Constant.HTTP_STATUS_CODE.CREATED, "Sign up success", result));
+            const checkExistEmail = await UserDB.getCustomer(req.body.email);
+            if(checkExistEmail !== null) {
+                return res.status(Constant.HTTP_STATUS_CODE.OK)
+                .json(new ResponseObject(Constant.HTTP_STATUS_CODE.OK, "Email is already used"));
+            } else {
+                const result = await UserDB.createAccount(req);
+                return res.status(Constant.HTTP_STATUS_CODE.CREATED)
+                    .json(new ResponseObject(Constant.HTTP_STATUS_CODE.CREATED, "Sign up success", result));
+            }
         } catch (error) {
             return res.status(Constant.HTTP_STATUS_CODE.INTERNAL_ERROR)
                 .json(new ResponseObject(Constant.HTTP_STATUS_CODE.INTERNAL_ERROR, error));
@@ -23,7 +29,7 @@ const userServices = {
 
     async getCustomerInformation(req, res) {
         try {
-            const data = await UserDB.getCustomer(req);
+            const data = await UserDB.getCustomer(req.params.email);
             return res.status(Constant.HTTP_STATUS_CODE.OK)
                 .json(new ResponseObject(Constant.HTTP_STATUS_CODE.OK, "Success", data));
         } catch (error) {
@@ -40,6 +46,10 @@ const userServices = {
                 .json(new ResponseObject(Constant.HTTP_STATUS_CODE.BAD_REQUEST, errors.array()));
             }
             const data = await UserDB.login(req);
+            if(data === null) {
+                return res.status(Constant.HTTP_STATUS_CODE.OK)
+                .json(new ResponseObject(Constant.HTTP_STATUS_CODE.OK, "Login fail"));
+            }
             const token = sha(data + new Date());
             const dataResponse = {
                 customer : data,

@@ -37,7 +37,7 @@ module.exports = {
         })
     },
 
-    getCustomer: (filter) => {
+    getCustomer: (email) => {
         const testQuery = 'select ' +
         'email,' +
         'first_name,' +
@@ -46,15 +46,19 @@ module.exports = {
         'address,' +
         'birthdate ' +
         'from public."customer" where email = $1';
-        let value = [filter.params.email];
+        let value = [email];
         return new Promise((resolve , reject) => {
             client.query(testQuery , value, (err , res) => {
                 if(err) {
                     reject(err)
                 } else {
-                    let dataCustomer = res.rows[0];
-                    dataCustomer.address = JSON.parse(dataCustomer.address);
-                    resolve(dataCustomer)
+                    if(res.rows.length === 0) {
+                        resolve(null);
+                    } else {
+                        let dataCustomer = res.rows[0];
+                        dataCustomer.address = JSON.parse(dataCustomer.address);
+                        resolve(dataCustomer)
+                    }
                 }
             })
         })
@@ -74,9 +78,13 @@ module.exports = {
                 if(err) {
                     reject(err);
                 } else {
-                    let dataCustomer = res.rows[0];
-                    dataCustomer.address = JSON.parse(dataCustomer.address);
-                    resolve(dataCustomer)
+                    if(res.rows.length === 0) {
+                        resolve(null)
+                    } else {
+                        let dataCustomer = res.rows[0];
+                        dataCustomer.address = JSON.parse(dataCustomer.address);
+                        resolve(dataCustomer)
+                    }
                 }
             })
         })
