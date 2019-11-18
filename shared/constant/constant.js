@@ -1,4 +1,4 @@
-const VERSION = '1';
+const VERSION = '1.1';
 const STATUS= {
     AVAILABLE: 1,
     DELETE: 0

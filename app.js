@@ -6,6 +6,7 @@ const cors = require('cors');
 const { Pool } = require('pg');
 
 const UserController = require('./controller/user-controller');
+const JobsController = require('./controller/jobs-controller');
 
 // const { Client } = require('pg');
 // const connectionString = 'postgres://postgres:123456@localhost:5432/GenWorks';
@@ -43,6 +44,7 @@ app.get('/api/v1/' , (req , res , next) =>{
 });
 
 app.use('/api/v1/users' , UserController);
+app.use('/api/v1/jobs' , JobsController);
 
 app.use((req , res , next) => {
     next({
