@@ -3,6 +3,7 @@ const router = express.Router();
 const middleware = require('../middleware/authorization');
 const ResponseObject = require('../shared/models/response_object');
 const Constant = require('../shared/constant/status_code')
+const JobSVC = require('../services/job-services');
 router.use('/' , (req , res , next) => {
     const isAuthen = middleware.authorization.checkToken(req);
     isAuthen.then((data) => {
@@ -15,9 +16,7 @@ router.use('/' , (req , res , next) => {
 })
 
 router.get('/' , (req , res , next) => {
-    res.status(200).json({
-        status: 200
-    })
+    JobSVC.jobServices.getAllJob(req , res);
 })
 
 module.exports = router;
