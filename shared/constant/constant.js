@@ -3,7 +3,7 @@ const STATUS= {
     AVAILABLE: 1,
     DELETE: 0
 };
-const TOKEN_TMP = '4ed0e0269417fc0ad305fd52d2d15028a3ab0d00d58e6b7dcf5065ccd4e0d1f1'
+const TOKEN_TMP = 'a6636fa3a6ed3275f6d86173bda3380a92ce4ec738be79812dd8cb4281e10b13'
 module.exports = {
     VERSION: VERSION,
     STATUS: STATUS,

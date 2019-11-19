@@ -72,6 +72,7 @@ module.exports = {
         'last_name,' +
         'age,' +
         'address,' +
+        'jobs,'+
         'birthdate ' + 'from public."customer" where email = $1 and password = $2';
         const value = [req.body.email , req.body.password];
         return new Promise((resolve , reject) => {
