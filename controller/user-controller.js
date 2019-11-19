@@ -11,7 +11,7 @@ router.post('/' , UserServices.validate.checkValidateSignup() , UserServices.use
 router.use('/',(req , res , next) => {
     const isAuthen = middleware.authorization.checkToken(req);
     isAuthen.then((data) => {
-        if(data) {
+        if(data.result) {
             next()
         } else {
             res.status(Constant.HTTP_STATUS_CODE.UNAUTHORIZED).json(new ResponseObject(Constant.HTTP_STATUS_CODE.UNAUTHORIZED , "Unauthorization"))    
@@ -23,9 +23,7 @@ router.put('/password' , (req , res , next) => {
     res.status(200).json(new ResponseObject(Constant.HTTP_STATUS_CODE.OK , "Change password success"))
 })
 
-router.put('/' , (req , res , next) => {
-    res.status(200).json(new ResponseObject(Constant.HTTP_STATUS_CODE.OK , "Change success"))
-})
+router.put('/' ,UserServices.validate.checkValidateUpdateCustomer(),UserServices.userServices.updateInformationCustomer)
 
 router.get('/:email' , (req , res , next) => {
     UserServices.userServices.getCustomerInformation(req , res);

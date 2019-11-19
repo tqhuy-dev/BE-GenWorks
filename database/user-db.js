@@ -102,5 +102,42 @@ module.exports = {
                 }
             })
         })
+    },
+
+    updateInformation: (req , email) => {
+        let valueUpdate = '';
+        let conditionUpdate = ' where email = $1';
+        let testQuery = 'update public."customer" set ';
+        let dataUpdate = [email];
+        if(req.body.age) {
+            dataUpdate.push(req.body.age);
+            valueUpdate += 'age = ' +'$'+dataUpdate.length +',';
+        }
+
+        if(req.body.address) {
+            dataUpdate.push(req.body.address);
+            valueUpdate += 'address = '+ '$' +dataUpdate.length+',';
+        }
+
+        if(req.body.birthdate) {
+            dataUpdate.push(req.body.birthdate);
+            valueUpdate += 'birthdate = '+ '$' +dataUpdate.length+',';
+        }
+
+        if(req.body.jobs) {
+            dataUpdate.push(req.body.jobs);
+            valueUpdate += 'jobs = '+ '$' +dataUpdate.length+',';
+        }
+
+        testQuery += valueUpdate.slice(0 , valueUpdate.length - 1) + conditionUpdate;
+        return new Promise((resolve , reject) => {
+            client.query(testQuery , dataUpdate , (err , result) => {
+                if(err) {
+                    reject(err);
+                } else {
+                    resolve(true);
+                }
+            })
+        })
     }
 }

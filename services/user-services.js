@@ -1,6 +1,7 @@
 const UserDB = require('../database/user-db');
 const Constant = require('../shared/constant/status_code');
 const ResponseObject = require('../shared/models/response_object');
+const middleware = require('../middleware/authorization');
 const { body, validationResult } = require('express-validator');
 const jwtServices = require('../shared/jwt/jwt-services');
 const sha = require('sha256');
@@ -62,7 +63,24 @@ const userServices = {
             return res.status(Constant.HTTP_STATUS_CODE.INTERNAL_ERROR)
                 .json(new ResponseObject(Constant.HTTP_STATUS_CODE.INTERNAL_ERROR, error));
         }
-    }
+    },
+
+    async updateInformationCustomer(req , res) {
+        try {
+            const errors = validationResult(req); // Finds the validation errors in this request and wraps them in an object with handy functions
+            if (!errors.isEmpty()) {
+                return res.status(Constant.HTTP_STATUS_CODE.BAD_REQUEST)
+                .json(new ResponseObject(Constant.HTTP_STATUS_CODE.BAD_REQUEST, errors.array()));
+            }
+            const dataCustomer = await middleware.authorization.checkTokenDatabase(req);
+            await UserDB.updateInformation(req , dataCustomer[0].email)
+            return res.status(Constant.HTTP_STATUS_CODE.OK)
+            .json(new ResponseObject(Constant.HTTP_STATUS_CODE.OK, "Change success"));
+        } catch (error) {
+            return res.status(Constant.HTTP_STATUS_CODE.INTERNAL_ERROR)
+                .json(new ResponseObject(Constant.HTTP_STATUS_CODE.INTERNAL_ERROR, error));
+        }
+    },
 }
 
 const validate = {
@@ -81,6 +99,12 @@ const validate = {
         return [
             body('email' , 'email is required').exists(),
             body('password' , 'password is required').exists()
+        ]
+    },
+
+    checkValidateUpdateCustomer() {
+        return [
+            body('age' , 'age is integer').isInt(),
         ]
     }
 }

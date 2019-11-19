@@ -7,18 +7,25 @@ client.connect();
 const authorization = {
     async checkToken(req) {
         if(req.headers.authorization) {
-            const dataCheck = await this.checkTokenDatabase(req);
-            if(dataCheck === '0') {
-                return false;
+            const data = await this.checkTokenDatabase(req);
+            if(data.length === 0) {
+                return {
+                    result: false
+                };
             }
-            return true;
+            return {
+                result: true,
+                data: data
+            };
         }
 
-        return false;
+        return {
+            result: false
+        };
     },
 
     async checkTokenDatabase(req) {
-        const testQuery = 'select count(*) from public."customer" where token = $1';
+        const testQuery = 'select * from public."customer" where token = $1';
         const value = [req.headers.authorization];
 
         return new Promise((resolve , reject) => {
@@ -26,7 +33,7 @@ const authorization = {
                 if(err) {
                     reject(err);
                 } else {
-                    resolve(res.rows[0].count);
+                    resolve(res.rows);
                 }
             })
         })

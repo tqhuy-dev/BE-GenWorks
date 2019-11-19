@@ -7,7 +7,7 @@ const JobSVC = require('../services/job-services');
 router.use('/' , (req , res , next) => {
     const isAuthen = middleware.authorization.checkToken(req);
     isAuthen.then((data) => {
-        if(data) {
+        if(data.result) {
             next()
         } else {
             res.status(Constant.HTTP_STATUS_CODE.UNAUTHORIZED).json(new ResponseObject(Constant.HTTP_STATUS_CODE.UNAUTHORIZED , "Unauthorization"))    
