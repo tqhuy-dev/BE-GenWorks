@@ -174,5 +174,28 @@ describe("Customer API!", () => {
         expect(res.body.message).to.equal("Email is already used");
         done();
       })
-  })
+  });
+
+  it("Test conflict email", done => {
+    chai
+      .request(app)
+      .put('/api/v1/users/')
+      .set('authorization', constant.TOKEN_TMP)
+      .send({
+        age:23,
+        address:{
+          city:"Ho Chi Minh City",
+          country:"VietNam",
+          address:"184/4 Dang Van Ngu Street , Phu Nhuan District"
+        },
+        birthdate:"1234567890",
+        jobs:[1,2,3]
+      })
+      .end((err , res) => {
+        expect(res).to.have.status(200);
+        expect(res.body.code).to.equal(200);
+        expect(res.body.message).to.equal("Change success");
+        done();
+      })
+  });
 });
