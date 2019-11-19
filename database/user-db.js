@@ -44,7 +44,8 @@ module.exports = {
         'last_name,' +
         'age,' +
         'address,' +
-        'birthdate ' +
+        'birthdate, ' +
+        'jobs ' +
         'from public."customer" where email = $1';
         let value = [email];
         return new Promise((resolve , reject) => {
