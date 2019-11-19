@@ -4,7 +4,7 @@ const chaiHttp = require("chai-http");
 const constant = require('../shared/constant/constant');
 const { expect } = chai;
 chai.use(chaiHttp);
-describe("Server!", () => {
+describe("Customer API!", () => {
   // it("Test sign up customer", done => {
   //   chai
   //     .request(app)

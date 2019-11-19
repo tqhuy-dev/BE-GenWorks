@@ -7,7 +7,7 @@ const jobServices = {
         try {
             const data = await JobDB.getAllJobs(req);
             return res.status(Constant.HTTP_STATUS_CODE.OK)
-                .json(new ResponseObject(Constant.HTTP_STATUS_CODE.OK, data));
+                .json(new ResponseObject(Constant.HTTP_STATUS_CODE.OK,'All Jobs', data));
         } catch (error) {
             return res.status(Constant.HTTP_STATUS_CODE.INTERNAL_ERROR)
                 .json(new ResponseObject(Constant.HTTP_STATUS_CODE.INTERNAL_ERROR, error));
