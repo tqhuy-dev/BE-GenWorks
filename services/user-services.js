@@ -11,12 +11,12 @@ const userServices = {
             const errors = validationResult(req); // Finds the validation errors in this request and wraps them in an object with handy functions
             if (!errors.isEmpty()) {
                 return res.status(Constant.HTTP_STATUS_CODE.BAD_REQUEST)
-                .json(new ResponseObject(Constant.HTTP_STATUS_CODE.BAD_REQUEST, errors.array()));
+                    .json(new ResponseObject(Constant.HTTP_STATUS_CODE.BAD_REQUEST, errors.array()));
             }
             const checkExistEmail = await UserDB.getCustomer(req.body.email);
-            if(checkExistEmail !== null) {
+            if (checkExistEmail !== null) {
                 return res.status(Constant.HTTP_STATUS_CODE.OK)
-                .json(new ResponseObject(Constant.HTTP_STATUS_CODE.OK, "Email is already used"));
+                    .json(new ResponseObject(Constant.HTTP_STATUS_CODE.OK, "Email is already used"));
             } else {
                 const result = await UserDB.createAccount(req);
                 return res.status(Constant.HTTP_STATUS_CODE.CREATED)
@@ -39,43 +39,46 @@ const userServices = {
         }
     },
 
-    async login(req , res) {
+    async login(req, res) {
         try {
             const errors = validationResult(req); // Finds the validation errors in this request and wraps them in an object with handy functions
             if (!errors.isEmpty()) {
                 return res.status(Constant.HTTP_STATUS_CODE.BAD_REQUEST)
-                .json(new ResponseObject(Constant.HTTP_STATUS_CODE.BAD_REQUEST, errors.array()));
+                    .json(new ResponseObject(Constant.HTTP_STATUS_CODE.BAD_REQUEST, errors.array()));
             }
             const data = await UserDB.login(req);
-            if(data === null) {
+            if (data === null) {
                 return res.status(Constant.HTTP_STATUS_CODE.OK)
-                .json(new ResponseObject(Constant.HTTP_STATUS_CODE.OK, "Login fail"));
+                    .json(new ResponseObject(Constant.HTTP_STATUS_CODE.OK, "Login fail"));
             }
             const token = sha(data + new Date());
+            await UserDB.updateTokenCustomer(token, req.body.email);
+            const session = sha(req.body.email + new Date());
+            await UserDB.updateSessionCustomer(session, req.body.email);
+            const dataCustomer = await UserDB.getCustomer(req.body.email);
             const dataResponse = {
-                customer : data,
+                customer: dataCustomer,
                 token: token
             };
-            await UserDB.updateTokenCustomer(token , req.body.email);
             return res.status(Constant.HTTP_STATUS_CODE.OK)
-            .json(new ResponseObject(Constant.HTTP_STATUS_CODE.OK, "Login success", dataResponse));
+                .json(new ResponseObject(Constant.HTTP_STATUS_CODE.OK, "Login success", dataResponse));
         } catch (error) {
             return res.status(Constant.HTTP_STATUS_CODE.INTERNAL_ERROR)
                 .json(new ResponseObject(Constant.HTTP_STATUS_CODE.INTERNAL_ERROR, error));
         }
     },
 
-    async updateInformationCustomer(req , res) {
+    async updateInformationCustomer(req, res) {
         try {
             const errors = validationResult(req); // Finds the validation errors in this request and wraps them in an object with handy functions
             if (!errors.isEmpty()) {
                 return res.status(Constant.HTTP_STATUS_CODE.BAD_REQUEST)
-                .json(new ResponseObject(Constant.HTTP_STATUS_CODE.BAD_REQUEST, errors.array()));
+                    .json(new ResponseObject(Constant.HTTP_STATUS_CODE.BAD_REQUEST, errors.array()));
             }
             const dataCustomer = await middleware.authorization.checkTokenDatabase(req);
-            await UserDB.updateInformation(req , dataCustomer[0].email)
+            await UserDB.updateInformation(req, dataCustomer[0].email)
             return res.status(Constant.HTTP_STATUS_CODE.OK)
-            .json(new ResponseObject(Constant.HTTP_STATUS_CODE.OK, "Change success"));
+                .json(new ResponseObject(Constant.HTTP_STATUS_CODE.OK, "Change success"));
         } catch (error) {
             return res.status(Constant.HTTP_STATUS_CODE.INTERNAL_ERROR)
                 .json(new ResponseObject(Constant.HTTP_STATUS_CODE.INTERNAL_ERROR, error));
@@ -87,24 +90,24 @@ const validate = {
     checkValidateSignup() {
         return [
             body('email', 'email is required').exists(),
-            body('password','password is required').exists(),
-            body('first_name' , 'first name is required').exists(),
-            body('last_name' , 'last name is required').exists(),
-            body('age' , 'age is required').exists().isInt(),
-            body('birthdate' , 'birthdate is required').exists()
+            body('password', 'password is required').exists(),
+            body('first_name', 'first name is required').exists(),
+            body('last_name', 'last name is required').exists(),
+            body('age', 'age is required').exists().isInt(),
+            body('birthdate', 'birthdate is required').exists()
         ]
     },
 
     checkValidateLogin() {
         return [
-            body('email' , 'email is required').exists(),
-            body('password' , 'password is required').exists()
+            body('email', 'email is required').exists(),
+            body('password', 'password is required').exists()
         ]
     },
 
     checkValidateUpdateCustomer() {
         return [
-            body('age' , 'age is integer').isInt(),
+            body('age', 'age is integer').isInt(),
         ]
     }
 }

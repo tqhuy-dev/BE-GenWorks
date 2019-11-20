@@ -43,6 +43,7 @@ module.exports = {
         'first_name,' +
         'last_name,' +
         'age,' +
+        'session,' +
         'address,' +
         'birthdate, ' +
         'jobs ' +
@@ -95,6 +96,20 @@ module.exports = {
     updateTokenCustomer: (token , email) => {
         const testQuery = 'update public."customer" set token = $1 where email = $2';
         const value = [token , email];
+        return new Promise((resolve , reject) => {
+            client.query(testQuery , value , (err , res) => {
+                if(err) {
+                    reject(err);
+                } else {
+                    resolve(true)
+                }
+            })
+        })
+    },
+    
+    updateSessionCustomer: (session , email) => {
+        const testQuery = 'update public."customer" set session = $1 where email = $2';
+        const value = [session , email];
         return new Promise((resolve , reject) => {
             client.query(testQuery , value , (err , res) => {
                 if(err) {
