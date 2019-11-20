@@ -131,6 +131,11 @@ module.exports = {
             valueUpdate += 'jobs = '+ '$' +dataUpdate.length+',';
         }
 
+        if(req.body.phone) {
+            dataUpdate.push(req.body.phone);
+            valueUpdate += 'phone = '+ '$' +dataUpdate.length+',';
+        }
+
         testQuery += valueUpdate.slice(0 , valueUpdate.length - 1) + conditionUpdate;
         return new Promise((resolve , reject) => {
             client.query(testQuery , dataUpdate , (err , result) => {

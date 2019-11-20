@@ -176,7 +176,7 @@ describe("Customer API!", () => {
       })
   });
 
-  it("Test conflict email", done => {
+  it("Test edit information users", done => {
     chai
       .request(app)
       .put('/api/v1/users/')
@@ -189,7 +189,8 @@ describe("Customer API!", () => {
           address:"184/4 Dang Van Ngu Street , Phu Nhuan District"
         },
         birthdate:"1234567890",
-        jobs:[1,2,3]
+        jobs:[1,2,3],
+        phone:'0946515847'
       })
       .end((err , res) => {
         expect(res).to.have.status(200);
