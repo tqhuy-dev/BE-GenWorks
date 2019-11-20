@@ -106,6 +106,9 @@ const userServices = {
             }
             const dataCustomer = await middleware.authorization.checkTokenDatabase(req);
             await UserDB.updateInformation(req, dataCustomer[0].email)
+            // if(req.body.jobs) {
+            //    await UserDB.updateAllJobsCustomer(req, dataCustomer[0].email);
+            // }
             return res.status(Constant.HTTP_STATUS_CODE.OK)
                 .json(new ResponseObject(Constant.HTTP_STATUS_CODE.OK, "Change success"));
         } catch (error) {
