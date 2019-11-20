@@ -7,6 +7,7 @@ const middleware = require('../middleware/authorization');
 router.post('/login' , UserServices.validate.checkValidateLogin() ,UserServices.userServices.login)
 
 router.post('/' , UserServices.validate.checkValidateSignup() , UserServices.userServices.createUserServices)
+router.get('/session/:session' , UserServices.userServices.getCustomerInformationSession)
 //MIDDLEWARE AUTHORIZATION
 router.use('/',(req , res , next) => {
     const isAuthen = middleware.authorization.checkToken(req);

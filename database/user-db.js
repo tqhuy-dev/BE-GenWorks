@@ -46,9 +46,41 @@ module.exports = {
         'session,' +
         'address,' +
         'birthdate, ' +
+        'phone, ' +
         'jobs ' +
         'from public."customer" where email = $1';
         let value = [email];
+        return new Promise((resolve , reject) => {
+            client.query(testQuery , value, (err , res) => {
+                if(err) {
+                    reject(err)
+                } else {
+                    if(res.rows.length === 0) {
+                        resolve(null);
+                    } else {
+                        let dataCustomer = res.rows[0];
+                        dataCustomer.address = JSON.parse(dataCustomer.address);
+                        resolve(dataCustomer)
+                    }
+                }
+            })
+        })
+    },
+
+    getCustomerBySession: (session) => {
+        const testQuery = 'select ' +
+        'email,' +
+        'first_name,' +
+        'last_name,' +
+        'age,' +
+        'session,' +
+        'token,' +
+        'phone,' +
+        'address,' +
+        'birthdate, ' +
+        'jobs ' +
+        'from public."customer" where session = $1';
+        let value = [session];
         return new Promise((resolve , reject) => {
             client.query(testQuery , value, (err , res) => {
                 if(err) {

@@ -39,6 +39,35 @@ const userServices = {
         }
     },
 
+    async getCustomerInformationSession(req, res) {
+        try {
+            const data = await UserDB.getCustomerBySession(req.params.session);
+            if(data === null) {
+                return res.status(Constant.HTTP_STATUS_CODE.OK)
+                .json(new ResponseObject(Constant.HTTP_STATUS_CODE.OK, "Session not found"));
+            }
+            const dataResponse = {
+                customer:{
+                    email: data.email,
+                    first_name: data.first_name,
+                    last_name: data.last_name,
+                    age: data.age,
+                    birthdate: data.birthdate,
+                    jobs: data.jobs,
+                    address: data.address,
+                    session: data.session,
+                    phone: data.phone
+                },
+                token: data.token
+            }
+            return res.status(Constant.HTTP_STATUS_CODE.OK)
+                .json(new ResponseObject(Constant.HTTP_STATUS_CODE.OK, "Success", dataResponse));
+        } catch (error) {
+            return res.status(Constant.HTTP_STATUS_CODE.INTERNAL_ERROR)
+                .json(new ResponseObject(Constant.HTTP_STATUS_CODE.INTERNAL_ERROR, error));
+        }
+    },
+
     async login(req, res) {
         try {
             const errors = validationResult(req); // Finds the validation errors in this request and wraps them in an object with handy functions
@@ -107,7 +136,8 @@ const validate = {
 
     checkValidateUpdateCustomer() {
         return [
-            body('age', 'age is integer').isInt(),
+            // body('age', 'age is integer').isInt(),
+            // body('phone' , 'phone is string').isString()
         ]
     }
 }
