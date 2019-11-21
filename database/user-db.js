@@ -196,7 +196,7 @@ const userDB = module.exports = {
 
     addJobDetail: (req , email) => {
         let valuesString = '';
-        const dataValues = [...req.body.jobs];
+        const dataValues = [...req];
         let dataInsert = [];
         const totalJobField = 5;
         dataValues.forEach((element , index) => {
@@ -216,7 +216,6 @@ const userDB = module.exports = {
                 element.description,
             ])
         })
-
         valuesString = valuesString.slice(0 , valuesString.length - 1);
         const testQuery = 'insert into public."job_customer_detail" (email, jobs_id, level, experience, description) VALUES' +
         valuesString;

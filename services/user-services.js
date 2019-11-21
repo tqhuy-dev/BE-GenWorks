@@ -112,7 +112,22 @@ const userServices = {
                 await UserDB.updateInformation(req, dataCustomer[0].email)
             }
             if(req.body.jobs) {
-               await UserDB.addJobDetail(req, dataCustomer[0].email);
+                const insertedData = req.body.jobs.filter((element) => {
+                    return element.id_job_detail === undefined;
+                });
+                const updatedData = req.body.jobs.filter((element) => {
+                    return element.id_job_detail !== undefined;
+                })
+                console.log(insertedData)
+                if(insertedData.length > 0) {
+                    await UserDB.addJobDetail(insertedData, dataCustomer[0].email);
+                }
+                let updatedPromise = [];
+                if(updatedData.length > 0) {
+                    updatedData.forEach(async (element) => {
+                        await UserDB.editJobDetail(element , element.id_job_detail);
+                    })
+                }
             }
             return res.status(Constant.HTTP_STATUS_CODE.OK)
                 .json(new ResponseObject(Constant.HTTP_STATUS_CODE.OK, "Change success"));
