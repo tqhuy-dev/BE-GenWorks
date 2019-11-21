@@ -103,12 +103,17 @@ const userServices = {
             if (!errors.isEmpty()) {
                 return res.status(Constant.HTTP_STATUS_CODE.BAD_REQUEST)
                     .json(new ResponseObject(Constant.HTTP_STATUS_CODE.BAD_REQUEST, errors.array()));
-            }
+                }
             const dataCustomer = await middleware.authorization.checkTokenDatabase(req);
-            await UserDB.updateInformation(req, dataCustomer[0].email)
-            // if(req.body.jobs) {
-            //    await UserDB.updateAllJobsCustomer(req, dataCustomer[0].email);
-            // }
+            if(!req.body.address && !req.body.birthdate && !req.body.phone && !req.body.age) {
+                // return res.status(Constant.HTTP_STATUS_CODE.OK)
+                // .json(new ResponseObject(Constant.HTTP_STATUS_CODE.OK, "Change success"));
+            } else {
+                await UserDB.updateInformation(req, dataCustomer[0].email)
+            }
+            if(req.body.jobs) {
+               await UserDB.addJobDetail(req, dataCustomer[0].email);
+            }
             return res.status(Constant.HTTP_STATUS_CODE.OK)
                 .json(new ResponseObject(Constant.HTTP_STATUS_CODE.OK, "Change success"));
         } catch (error) {

@@ -6,7 +6,7 @@ const client = new Client({
 const Constant = require('../shared/constant/constant');
 
 client.connect();
-module.exports = {
+const userDB = module.exports = {
     createAccount: (req) => {
         const query = 'INSERT INTO public."customer"(' +
             'email, password, created_date, updated_date, first_name, last_name,' +
@@ -192,39 +192,37 @@ module.exports = {
 
     updateAllJobsCustomer: (req, email) => {
 
-        return new Promise((resolve , reject) => {
-            let data = [];
-            let promiseArr = [];
-            data = [...req.body.jobs];
-            data.forEach((element) => {
-                if (!element.id_job_detail) {
-                    const dataInsert = [
-                        email,
-                        element.jobs_id,
-                        element.level,
-                        element.experience,
-                        element.description
-                    ]
-                    promiseArr.push(this.addJobDetail([dataInsert]))
-                } else {
-                    promiseArr.push(this.editJobDetail(element));
-                }
-            })
-    
-            Promise.all(promiseArr).then((result) => {
-                resolve(true);
-            }).catch((err) => {
-                reject(err);
-            });
-        })
     },
 
-    addJobDetail: (data) => {
-        const testQuery = 'insert into public."job_customer_detail" (email , jobs_id , level , experience , description) ' +
-            'values($1 , $2 , $3 , $4 , $5)';
+    addJobDetail: (req , email) => {
+        let valuesString = '';
+        const dataValues = [...req.body.jobs];
+        let dataInsert = [];
+        const totalJobField = 5;
+        dataValues.forEach((element , index) => {
+            valuesString += '(' + 
+            '$' + ((index+1) * totalJobField - 4) + ',' +
+            '$' + ((index+1) * totalJobField - 3) + ',' + 
+            '$' + ((index+1) * totalJobField - 2) + ',' +
+            '$' + ((index+1) * totalJobField - 1) + ',' +
+            '$' + ((index+1) * totalJobField - 0) + '' +
+            '),'
+
+            dataInsert = dataInsert.concat([
+                email,
+                element.jobs_id,
+                element.level,
+                element.experience,
+                element.description,
+            ])
+        })
+
+        valuesString = valuesString.slice(0 , valuesString.length - 1);
+        const testQuery = 'insert into public."job_customer_detail" (email, jobs_id, level, experience, description) VALUES' +
+        valuesString;
 
         return new Promise((resolve, reject) => {
-            client.query(testQuery, data, (err, res) => {
+            client.query(testQuery, dataInsert, (err, res) => {
                 if (err) {
                     reject(err);
                 } else {
