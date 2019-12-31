@@ -164,7 +164,7 @@ const userDB = module.exports = {
         }
 
         if (req.body.address) {
-            dataUpdate.push(req.body.address);
+            dataUpdate.push( JSON.stringify(req.body.address));
             valueUpdate += 'address = ' + '$' + dataUpdate.length + ',';
         }
 
